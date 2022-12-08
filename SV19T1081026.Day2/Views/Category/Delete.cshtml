@@ -1,0 +1,28 @@
+﻿@model SV19T1081026.DomainModels.PostCategory
+@{
+    ViewBag.Title = "Xác nhận xoá phân loại tin";
+}
+<div class="box">
+    <div class="box-header with-border">
+        <form action="~/Category/Delete/@Model.CategoryId" method="post">
+            <div class="form-group">
+                <label for="CategoryName">Tên phân loại:</label>
+                <p class="form-control-static">@Model.CategoryName</p>
+            </div>
+            <div class="form-group">
+                <label for="CategoryUrlName">Tên trên Url:</label>
+                <p class="form-control-static">@Model.CategoryUrlName</p>
+            </div>
+            <div class="form-group">
+                <label for="CategoryDescriptions">Mô tả:</label>
+                <p class="form-control-static"style="border-bottom:1px dotted #646464">@Model.CategoryDescriptions</p>
+            </div>
+            @if (!SV19T1081026.BusinessLayers.ContentService.InUsedCategory(Model.CategoryId)) 
+            
+            { <button type="submit" class="btn btn-danger"><i class="glyphicon glyphicon-remove"></i> Đồng ý xoá </button>}
+            
+            <a href="~/Category" class="btn btn-warning" style="float:right">Quay lại</a>
+        </form>
+    </div>
+</div>
+

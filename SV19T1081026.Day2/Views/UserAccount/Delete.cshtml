@@ -1,0 +1,27 @@
+﻿@model SV19T1081026.DomainModels.UserAccount
+@{
+    ViewBag.Title = "Xác nhận xoá tài khoản";
+}
+<div class="box">
+    <div class="box-header with-border">
+        <form action="~/UserAccount/Delete/@Model.UserId" method="post">
+            <div class="form-group">
+                <label for="UserName">Tên người dùng</label>
+                <p class="form-control-static">@Model.UserName</p>
+            </div>
+            <div class="form-group">
+                <label for="Email">Email: </label>
+                <p class="form-control-static">@Model.Email</p>
+            </div>
+            <div class="form-group">
+                <label for="Phone">Số điện thoại: </label>
+                <p class="form-control-static" style="border-bottom:1px dotted #646464">@Model.Phone</p>
+            </div>
+            @*@if (!SV19T1081026.BusinessLayers.UserService.InUsedUserAccount(Model.UserId))*@
+            <button type="submit" class="btn btn-danger"><i class="glyphicon glyphicon-remove"></i> Đồng ý xoá </button>
+
+            <a href="~/UserAccount" class="btn btn-warning" style="float:right">Quay lại</a>
+        </form>
+    </div>
+</div>
+

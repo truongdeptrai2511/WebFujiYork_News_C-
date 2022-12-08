@@ -1,0 +1,60 @@
+﻿@model News.Models.PostSearchInput
+@{
+    List<SelectListItem> listCategories = SelectListHelper.PostCategories();
+    listCategories.Insert(0, new SelectListItem() { Value = "0" });
+}
+    @*<link href='https://fonts.googleapis.com/css?family=Playfair+Display:400,700,900,400italic,700italic,900italic|Droid+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="styles/newspaper.css">
+    <meta name="viewport" content="width=device-width">*@
+
+    <div class="box box-primary">
+        <div class="box-body">
+            <form id="formSearch" action="~/Home/Search">
+                <div class="content">
+                    @Html.HiddenFor(m => m.PageSize)
+                    <div class="collumns">
+
+                        <div class="table" style="float: left; padding: 5px; margin: 0 auto; width: 15%;display:inline">
+                            <div class="row" style="float:inline-start; text-align: center;">
+                                <p style="font-family: 'Playfair Display',serif; color: black; font-weight: normal">
+                                    <h4 style="font-family: 'Playfair Display',serif;font-weight: normal; padding-left:50px">
+                                        @Html.DropDownListFor(m => m.CategoryId, listCategories, new { @class = "form-control" })
+                                    </h4>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-9 form-group">
+                        <div class="input-group">
+                            @Html.TextBoxFor(m => m.SearchValue, new { @class = "form-control", @placeholder = "Nhập giá trị cần tìm...", @autofocus = "autofocus" })
+                            <span class="input-group-btn">
+                                <button id="buttonSearch" type="button" class="btn btn-info btn-flat">Tìm kiếm</button>
+
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="box box-success">
+        <div class="box-body" id="searchResult">
+        </div>
+    </div>
+
+    @section scripts {
+        <script>
+        $(document).ready(function () {
+            $("#buttonSearch").click(function () {
+                paginationSearch(1);
+            });
+            $("#formSearch").submit(function (e) {
+                e.preventDefault();
+                paginationSearch(1);
+                return false;
+            });
+            paginationSearch(@Model.Page);
+        })
+        </script>
+    }

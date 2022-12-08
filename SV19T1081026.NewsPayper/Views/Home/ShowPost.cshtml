@@ -1,0 +1,28 @@
+﻿@model SV19T1081026.NewsPayper.Models.PostSearchOutput
+@{
+    var item = Model.DataPost;
+    {
+        <link href="~/style.css" rel="stylesheet" />
+        <div class="body-content" style="font-size: 14px; line-height: 15px; width: 100%; display: block; padding-right:4%;padding-left:2%; vertical-align: top; margin-bottom: 50px; transition: all .9s; ">
+            <div class="head">
+                <span class="headline hl3" style="font-size:large; font-weight:800">
+                    <p style="font-family: 'Droid Serif', serif; color: #2f2f2f; font-size:25px">
+                        @item.Title
+                    </p>
+                </span>
+                <p>
+                    <span class="headline hl4">Create time @item.CreatedTime</span>
+                </p>
+            </div>
+            <div>
+                <p style="font-family: 'Droid Serif', serif; color: #2f2f2f; font-size: 19px; word-spacing: .15em; line-height: normal">
+
+                    @item.FullContent
+
+                </p>
+            </div>
+        </div>
+
+                        }
+}
+

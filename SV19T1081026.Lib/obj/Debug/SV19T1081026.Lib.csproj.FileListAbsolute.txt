@@ -1,0 +1,6 @@
+C:\Users\phamd\OneDrive\Documents\Lap trinh web c#\Day2\SV19T1081026\SV19T1081026.Lib\bin\Debug\SV19T1081026.Lib.dll
+C:\Users\phamd\OneDrive\Documents\Lap trinh web c#\Day2\SV19T1081026\SV19T1081026.Lib\bin\Debug\SV19T1081026.Lib.pdb
+C:\Users\phamd\OneDrive\Documents\Lap trinh web c#\Day2\SV19T1081026\SV19T1081026.Lib\obj\Debug\SV19T1081026.Lib.csproj.AssemblyReference.cache
+C:\Users\phamd\OneDrive\Documents\Lap trinh web c#\Day2\SV19T1081026\SV19T1081026.Lib\obj\Debug\SV19T1081026.Lib.csproj.CoreCompileInputs.cache
+C:\Users\phamd\OneDrive\Documents\Lap trinh web c#\Day2\SV19T1081026\SV19T1081026.Lib\obj\Debug\SV19T1081026.Lib.dll
+C:\Users\phamd\OneDrive\Documents\Lap trinh web c#\Day2\SV19T1081026\SV19T1081026.Lib\obj\Debug\SV19T1081026.Lib.pdb

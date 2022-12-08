@@ -1,0 +1,68 @@
+﻿@model  SV19T1081026.AdminTool.Models.CategorySearchOutput
+@{
+    Layout = null;
+    ViewBag.Title = "Quản lý phân loại tin";
+}
+<div class="row">
+    <div class="col-md-12">
+        Có tất cả @Model.RowCount phân loại tin. Bạn đang ở trang @Model.Page trên tổng số @Model.PageCount loại tin.
+    </div>
+</div>
+<div class="table-responsive">
+    <table class="table table-bordered table-hover">
+        <thead>
+            <tr class="bg-primary">
+                <th>Tên phân loại</th>
+                <th>Tên URL</th>
+                <th style="width:auto">Mô tả</th>
+                <th style="width:60px">Thứ tự</th>
+                <th style="width:100px">Chức năng</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Data)
+            {
+                <tr>
+                    <td>@item.CategoryName</td>
+                    <td>@item.CategoryUrlName</td>
+                    <td>@item.CategoryDescriptions</td>
+                    <td class="text-center">
+                        <a href="Javascripts:;" onclick="changeOrder(@item.CategoryId, true, @Model.Page)" class="btn btn-xs btn-default">
+                            <i class="glyphicon glyphicon-circle-arrow-up"></i>
+                        </a>
+                        <a href="Javascripts:;" onclick="changeOrder(@item.CategoryId, false, @Model.Page)" class="btn btn-xs btn-default">
+                            <i class="glyphicon glyphicon-circle-arrow-down"></i>
+                        </a>
+                    </td>
+                    <td class="text-right">
+                        <a href="~/Category/Delete/@item.CategoryId" class="btn btn-danger">
+                            <i class="glyphicon glyphicon-remove"></i>
+                        </a>
+                        <a href="~/Category/Edit/@item.CategoryId" class="btn btn-default">
+                            <i class="glyphicon glyphicon-edit"></i>
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<div class="row">
+    <div class="col-md-12 text-center">
+        <ul class="pagination">
+            @for (int page = 1; page <= Model.PageCount; page++)
+            {
+                if (page == Model.Page)
+                {
+                    <li class="active"><a href="#">@page</a></li>
+                }
+                else
+                {
+                    <li><a href="javascripts:;" onclick="doSearch(@page)">@page</a></li>
+                }
+            }
+        </ul>
+    </div>
+</div>
+

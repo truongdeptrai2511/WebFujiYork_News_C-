@@ -1,0 +1,6 @@
+C:\Users\phamd\OneDrive\Documents\Lap trinh web c#\Day2\SV19T1081026\SV19T1081026.DomainModels\bin\Debug\SV19T1081026.DomainModels.dll
+C:\Users\phamd\OneDrive\Documents\Lap trinh web c#\Day2\SV19T1081026\SV19T1081026.DomainModels\bin\Debug\SV19T1081026.DomainModels.pdb
+C:\Users\phamd\OneDrive\Documents\Lap trinh web c#\Day2\SV19T1081026\SV19T1081026.DomainModels\obj\Debug\SV19T1081026.DomainModels.csproj.AssemblyReference.cache
+C:\Users\phamd\OneDrive\Documents\Lap trinh web c#\Day2\SV19T1081026\SV19T1081026.DomainModels\obj\Debug\SV19T1081026.DomainModels.csproj.CoreCompileInputs.cache
+C:\Users\phamd\OneDrive\Documents\Lap trinh web c#\Day2\SV19T1081026\SV19T1081026.DomainModels\obj\Debug\SV19T1081026.DomainModels.dll
+C:\Users\phamd\OneDrive\Documents\Lap trinh web c#\Day2\SV19T1081026\SV19T1081026.DomainModels\obj\Debug\SV19T1081026.DomainModels.pdb

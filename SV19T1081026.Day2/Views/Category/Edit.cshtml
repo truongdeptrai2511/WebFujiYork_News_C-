@@ -1,0 +1,27 @@
+﻿@model SV19T1081026.DomainModels.PostCategory
+<div class="box">
+    <div class="box-header with-border">
+        <form action="~/Category/SaveData" method="post">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="CategoryId" value="@Model.CategoryId"/>
+            <div class="form-group">
+                <label for="CategoryName">Tên phân loại:</label>
+                <input type="text" class="form-control" name="CategoryName" autofocus value="@Model.CategoryName"/>
+                @Html.ValidationMessage("CategoryName", new { @style = "color:#ff0000;"})
+            </div>
+            <div class="form-group">
+                <label for="CategoryUrlName">Tên trên Url:</label>
+                <input type="text" class="form-control" name="CategoryUrlName" value="@Model.CategoryUrlName" />
+                @Html.ValidationMessage("UrlName", new { @style = "color:#ff0000;"})
+            </div>
+            <div class="form-group">
+                <label for="CategoryDescriptions">Mô tả:</label>
+                <input type="text" class="form-control" name="CategoryDescriptions" value="@Model.CategoryDescriptions"/>
+            </div>
+            <button type="submit" class="btn btn-primary"><i class="glyphicon glyphicon-floppy-disk"></i> Lưu dữ liệu</button>
+            <a href="~/Category" class="btn btn-warning">Quay lại</a>
+            @Html.ValidationSummary()
+        </form>   
+    </div>
+</div>
+

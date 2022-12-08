@@ -1,0 +1,14 @@
+﻿@model SV19T1081026.NewsPayper.Models.PostCategoryOutput
+@{ Layout = null;}
+
+<link href="~/Css/style.css" rel="stylesheet" />
+@foreach(var item in Model.Data)
+{
+    <div class="table" style="float: left; padding: 5px; margin: 0 auto; width: 15%;display:block">
+        <div class="row" style="float:inline-start; text-align: center;">
+            <a href="~/Home/Search/@item.CategoryId" style="font-family: 'Playfair Display',serif; text-decoration: none; color: black; font-weight: normal">
+                <h4 style="font-family: 'Playfair Display',serif;font-weight: normal; padding-left:50px">@item.CategoryName</h4>
+            </a>
+        </div>
+    </div>
+}

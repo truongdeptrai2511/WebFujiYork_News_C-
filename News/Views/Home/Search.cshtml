@@ -1,0 +1,41 @@
+﻿@model News.Models.PostSearchOutput
+@{
+    Layout = null;
+}
+
+    <link href='https://fonts.googleapis.com/css?family=Playfair+Display:400,700,900,400italic,700italic,900italic|Droid+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="styles/newspaper.css">
+    <meta name="viewport" content="width=device-width">
+
+    <div class="content">
+        <div class="collumns">
+            @foreach (var item in Model.Data)
+            {
+                <div class="collumn">
+                    <div class="head"><span class="headline hl3">@item.Title</span><p><span class="headline hl4">create time @item.CreatedTime</span></p></div>
+                    @item.BriefContent
+                </div>
+            }
+        </div>
+    </div>
+
+@if (Model.PageCount > 1)
+{
+    <div class="row">
+        <div class="col-md-12 text-center">
+            <ul class="pagination">
+                @for (int page = 1; page <= Model.PageCount; page++)
+                {
+                    if (page == Model.Page)
+                    {
+                        <li class="active"><a href="#">@page</a></li>
+                    }
+                    else
+                    {
+                        <li><a href="javascript:;" onclick="paginationSearch(@page)">@page</a></li>
+                    }
+                }
+            </ul>
+        </div>
+    </div>
+}

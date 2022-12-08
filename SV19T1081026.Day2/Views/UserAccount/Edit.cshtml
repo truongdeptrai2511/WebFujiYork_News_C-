@@ -1,0 +1,105 @@
+﻿@model SV19T1081026.DomainModels.UserAccount
+
+<div class="box box-primary">
+    <div class="box-header with-border">
+        <form class="form-horizontal" action="~/UserAccount/SaveData" method="post">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="UserId" value="@Model.UserId" />
+
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="UserName">Tên người dùng:</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" name="UserName" id="UserName" value="@Model.UserName">
+                    @Html.ValidationMessage("UserName", new { @style = "color:#ff0000;" })
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="FirstName">Họ:</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" name="FirstName" id="FirstName" value="@Model.FirstName">
+                    @Html.ValidationMessage("FirstName", new { @style = "color:#ff0000;" })
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="LastName">Tên:</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" name="LastName" id="LastName" value="@Model.LastName">
+                    @Html.ValidationMessage("LastName", new { @style = "color:#ff0000;" })
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="Email">Email:</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" name="Email" id="Email" value="@Model.Email">
+                    @Html.ValidationMessage("Email", new { @style = "color:#ff0000;" })
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="Phone">Số điện thoại:</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" name="Phone" id="Phone" value="@Model.Phone">
+                    @Html.ValidationMessage("Phone", new { @style = "color:#ff0000;" })
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="IsLocked">Trạng thái:</label>
+                <div class="col-sm-10">
+                    <label>
+                        @if (!Model.IsLocked)
+                        {
+                            @Html.RadioButtonFor(m => m.IsLocked, "false", new { @checked = "checked" })
+                        }
+                        else
+                        {
+                            @Html.RadioButtonFor(m => m.IsLocked, "false")
+                        }
+
+                        Bình thường
+                    </label>
+                    <label>
+                        @if (!Model.IsLocked)
+                        {
+                            @Html.RadioButtonFor(m => m.IsLocked, "true")
+                        }
+                        else
+                        {
+                            @Html.RadioButtonFor(m => m.IsLocked, "true", new { @checked = "checked" })
+                        }
+                        Khoá
+                    </label>
+
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="GroupName">Quyền truy cập:</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" name="GroupName" id="GroupName" value="@Model.GroupName">
+                    @Html.ValidationMessage("GroupName", new { @style = "color:#ff0000;" })
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="Password">Mật khẩu:</label>
+                <div class="col-sm-10">
+                    <input type="password" class="form-control" name="Password" id="Password" value="@Model.Password">
+                    @Html.ValidationMessage("Password", new { @style = "color:#ff0000;" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-sm-2"></label>
+                <div class="col-sm-10">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="glyphicon glyphicon-edit"></i>
+                        Lưu thông tin
+                    </button>
+
+                    <a href="~/UserAccount" class="btn btn-warning">Quay lại</a>
+                </div>
+            </div>
+
+
+        </form>
+    </div>
+</div>
+
+
