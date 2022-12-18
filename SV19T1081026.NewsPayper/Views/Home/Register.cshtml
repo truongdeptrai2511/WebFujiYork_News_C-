@@ -1,0 +1,96 @@
+﻿@model SV19T1081026.DomainModels.UserAccount
+@{
+    Layout = null;
+}
+
+<form id="formRegister" class="form-horizontal" action="~/Home/Register" method="post">
+
+    <div class="form-group row">
+        <label class="control-label col-sm-3 text-right mt-1" for="UserName">Tên người dùng:</label>
+        <div class="col-sm-9">
+            <input type="text" class="form-control" name="UserName" id="UserName" value="@Model.UserName" placeholder="Tên người dùng">
+            @Html.ValidationMessage("UserName", new { @style = "color:#ff0000;" })
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="control-label col-sm-3 text-right mt-1" for="FirstName">Họ:</label>
+        <div class="col-sm-9">
+            <input type="text" class="form-control" name="FirstName" id="FirstName" value="@Model.FirstName" placeholder="Họ">
+            @Html.ValidationMessage("FirstName", new { @style = "color:#ff0000;" })
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="control-label col-sm-3 text-right mt-1" for="LastName">Tên:</label>
+        <div class="col-sm-9">
+            <input type="text" class="form-control" name="LastName" id="LastName" value="@Model.LastName" placeholder="Tên">
+            @Html.ValidationMessage("LastName", new { @style = "color:#ff0000;" })
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="control-label col-sm-3 text-right mt-1" for="Email">Email:</label>
+        <div class="col-sm-9">
+            <input type="text" class="form-control" name="Email" id="Email" value="@Model.Email" placeholder="Email">
+            @Html.ValidationMessage("Email", new { @style = "color:#ff0000;" })
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="control-label col-sm-3 text-right mt-1" for="Phone">Số điện thoại:</label>
+        <div class="col-sm-9">
+            <input type="text" class="form-control" name="Phone" id="Phone" value="@Model.Phone" placeholder="Số điện thoại">
+            @Html.ValidationMessage("Phone", new { @style = "color:#ff0000;" })
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="control-label col-sm-3 text-right mt-1" for="Password">Mật khẩu:</label>
+        <div class="col-sm-9">
+            <input type="password" class="form-control" name="Password" id="Password" value="" placeholder="Mật khẩu">
+            @Html.ValidationMessage("Password", new { @style = "color:#ff0000;" })
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label class="control-label col-sm-3 text-right mt-1" for="PassConfirm">Xác nhận mật khẩu:</label>
+        <div class="col-sm-9">
+            <input type="password" class="form-control" name="PassConfirm" id="PassConfirm" value="" placeholder="Xác nhận mật khẩu">
+            @Html.ValidationMessage("PassConfirm", new { @style = "color:#ff0000;" })
+        </div>
+    </div>
+    <button id="btnRegister" type="button" class="btn btn-info btn-block btn-round">Đăng ký</button>
+</form>
+@if (ViewBag.RegisterSuccess != null)
+{
+    <script>
+        alert("Đăng ký thành công!!!");
+        $('#loginModal1').modal('hide');
+        $('#loginModal').modal('show');
+    </script>
+}
+<script>
+    $(document).ready(function () {
+        $("#btnRegister").click(function () {
+            doRegister();
+        });
+        $("#PassConfirm").keyup(function (e) {
+            if (e.keyCode == 13) {
+                doRegister();
+            }
+        });
+
+    })
+    function doRegister() {
+        var link = $("#formRegister").prop("action");
+        var data = $("#formRegister").serializeArray();
+        $.ajax({
+            url: link,
+            type: "POST",
+            data: data,
+            async: false,
+            error: function () {
+                alert("Your data is not valid!");
+            },
+            success: function (data) {
+                $("#register").html(data);
+            }
+        });
+    }
+</script>

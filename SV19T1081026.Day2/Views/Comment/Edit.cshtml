@@ -1,0 +1,66 @@
+﻿@model SV19T1081026.DomainModels.PostComment
+@{
+    List<SelectListItem> listAllowComment = new List<SelectListItem>();
+    listAllowComment.Add(new SelectListItem() { Value = "true", Text = "Cho phép" });
+    listAllowComment.Add(new SelectListItem() { Value = "false", Text = "Không cho phép" });
+    ViewBag.Title = "Chi tiết bình luận";
+}
+
+<div class="box box-danger">
+    <div class="box-body">
+        <form action="~/Comment/Delete/@Model.CommentId" method="post">
+            <div class="form-group">
+                <label for="CategoryName">Tên bài viết:</label>
+                <p class="form-control-static">@Model.Post.Title</p>
+            </div>
+            <div class="form-group">
+                <label for="CategoryUrlName">Tên người dùng:</label>
+                <p class="form-control-static">@Model.Commenter.FirstName @Model.Commenter.LastName</p>
+            </div>
+            <div class="form-group">
+                <label for="CategoryDescriptions">Nội dung bình luận:</label>
+                <p class="form-control-static" style="border-bottom:1px dotted #646464;">@Model.CommentContent</p>
+            </div>
+            <div class="form-group">
+                <label for="">Hiển thị:</label>
+                @Html.DropDownListFor(m => m.IsAccepted, listAllowComment, new { @class = "form-control", @id = "IsAccepted" })
+            </div>
+            <button type="submit" class="btn btn-danger">
+                <i class="glyphicon glyphicon-remove"></i>
+                Xoá
+            </button>
+
+
+
+            <a href="~/Comment" class="btn btn-warning">Quay lại</a>
+        </form>
+    </div>
+</div>
+
+@section scripts {
+    <script>
+        $(document).ready(function () {
+            $("#IsAccepted").change(function () {
+                changeState(@Model.CommentId);
+            });
+        });
+
+        function changeState(id) {
+            var link = "/Comment/ChangeState";
+            let data = [];
+            data.push({ "name": "id", "value": id })
+            $.ajax({
+                url: link,
+                type: "POST",
+                data: data,
+                async: false,
+                error: function () {
+                    alert("Your data is not valid!");
+                },
+                success: function (data) {
+
+                }
+            });
+        }
+    </script>
+}

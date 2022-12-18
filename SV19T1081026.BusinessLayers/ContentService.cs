@@ -16,6 +16,7 @@ namespace SV19T1081026.BusinessLayers
     {
         private static readonly IPostCategoryDAL postCategoryDB;
         private static readonly IPostDAL postDB;
+        private static readonly IPostCommentDAL postCommentDB;
 
         /// <summary>
         /// Ctor
@@ -26,6 +27,22 @@ namespace SV19T1081026.BusinessLayers
 
             postCategoryDB = new DataLayers.SqlServer.PostCategoryDAL(connectionString);
             postDB = new DataLayers.SqlServer.PostDAL(connectionString);
+            postCommentDB = new DataLayers.SqlServer.PostCommentDAL(connectionString);
+        }
+
+        /// <summary>
+        /// Tìm kiếm, hiển thị danh sách bài viết dưới dạng phân trang dành cho trang người dùng 
+        /// </summary>
+        /// <param name="page"></param>
+        /// <param name="pageSize"></param>
+        /// <param name="searchValue"></param>
+        /// <param name="categoryId"></param>
+        /// <param name=""></param>
+        /// <returns></returns>
+        public static List<Post> ListPostsUser(int page, int pageSize, string searchValue, int categoryId, out int rowCount)
+        {
+            rowCount = postDB.CountNotHide(searchValue, categoryId);
+            return postDB.ListUser(page, pageSize, searchValue, categoryId).ToList();
         }
 
         #region Post Category
@@ -171,10 +188,10 @@ namespace SV19T1081026.BusinessLayers
         /// <param name="postId"></param>
         /// <param name="rowCount"></param>
         /// <returns></returns>
-        public static List<Post> ShowPostScreen(int page, int pageSize, string searchValue, int postId, out int rowCount)
+        public static List<Post> ShowPostScreen(int page, int pageSize, string searchValue, int categoryId, out int rowCount)
         {
-            rowCount = postDB.Count(searchValue, postId);
-            return postDB.ShowScreenNews(page, pageSize, searchValue, postId).ToList();
+            rowCount = postDB.Count(searchValue, categoryId);
+            return postDB.List(page, pageSize, searchValue, categoryId).ToList();
         }
         public static List<Post> ListPosts()
         {
@@ -234,6 +251,46 @@ namespace SV19T1081026.BusinessLayers
         public static bool DeletePost(long postId)
         {
             return postDB.Delete(postId);
+        }
+        #endregion
+        #region PostComment
+        /// <summary>
+        /// Thêm mới bình luận
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        public static long AddComment(PostComment data)
+        {
+            return postCommentDB.Add(data);
+        }
+        /// <summary>
+        /// Cho phép bình luận được hiển thị hoặc không
+        /// </summary>
+        /// <param name="commentId"></param>
+        /// <returns></returns>
+        public static bool ChangeState(long commentId)
+        {
+            return postCommentDB.ChangeState(commentId);
+        }
+        /// <summary>
+        /// Lấy bình luận
+        /// </summary>
+        /// <param name="commentId"></param>
+        /// <returns></returns>
+        public static PostComment GetComment(long commentId)
+        {
+            return postCommentDB.Get(commentId);
+        }
+
+        public static bool DeleteComment(long commentId)
+        {
+            return postCommentDB.Delete(commentId);
+        }
+
+        public static List<PostComment> ListComments(int page, int pageSize, string searchValue, long postId, out int rowCount)
+        {
+            rowCount = postCommentDB.Count(searchValue, postId);
+            return postCommentDB.List(page, pageSize, searchValue, postId).ToList();
         }
         #endregion
     }

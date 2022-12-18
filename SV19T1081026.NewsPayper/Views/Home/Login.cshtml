@@ -1,0 +1,53 @@
+﻿
+@{
+    Layout = null;
+}
+
+
+@Html.AntiForgeryToken()
+<div class="form-group has-feedback">
+    <input name="userName" type="text" class="form-control" placeholder="Tên đăng nhập">
+    <span class="glyphicon glyphicon-user form-control-feedback"></span>
+</div>
+<div class="form-group has-feedback">
+    <input id="passInput" name="password" type="password" class="form-control" placeholder="Mật khẩu">
+    <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+</div>
+<div class="text-left">
+    @Html.ValidationMessage("", new { @style = "color: #FF0000" })
+</div>
+
+<script>
+        function clickSignUp() {
+            $('#loginModal').modal('hide');
+            $('#loginModal1').modal('show');
+        }
+
+        $(document).ready(function () {
+            $("#btnSubmit").click(function () {
+                doLogin();
+            });
+            $("#passInput").keyup(function (e) {
+                if (e.keyCode == 13) {
+                    doLogin();
+                }
+            });
+
+        })
+        function doLogin() {
+            var link = $("#formLogin").prop("action");
+            var data = $("#formLogin").serializeArray();
+            $.ajax({
+                url: link,
+                type: "POST",
+                data: data,
+                async: false,
+                error: function () {
+                    alert("Your data is not valid!");
+                },
+                success: function (data) {
+                    $("#LoginModal").html(data);
+                }
+            });
+        }
+</script>

@@ -30,8 +30,8 @@ namespace SV19T1081026.DataLayers.SqlServer
             {
                 using (SqlCommand cmd = connection.CreateCommand())
                 {
-                    cmd.CommandText = @"INSERT INTO UserAccount(UserName, FirstName, LastName, Email, Phone, Password, RegisteredTime, IsLocked)
-                                        VALUES (@UserName, @FirstName, @LastName, @Email, @Phone, @Password, GETDATE(), @IsLocked);
+                    cmd.CommandText = @"INSERT INTO UserAccount(UserName, FirstName, LastName, Email, Phone, Password, RegisteredTime, IsLocked, GroupName)
+                                        VALUES (@UserName, @FirstName, @LastName, @Email, @Phone, @Password, GETDATE(), @IsLocked, @GroupName);
                                         SELECT SCOPE_IDENTITY();";
                     cmd.CommandType = CommandType.Text;
                     cmd.Parameters.AddWithValue("@UserName", data.UserName);
@@ -40,9 +40,8 @@ namespace SV19T1081026.DataLayers.SqlServer
                     cmd.Parameters.AddWithValue("@Email", data.Email);
                     cmd.Parameters.AddWithValue("@Phone", data.Phone);
                     cmd.Parameters.AddWithValue("@Password", data.Password);
-                    //cmd.Parameters.AddWithValue("@RegisteredTime", data.RegisteredTime);
                     cmd.Parameters.AddWithValue("@IsLocked", data.IsLocked);
-
+                    cmd.Parameters.AddWithValue("@GroupName", data.GroupName);
                     result = Convert.ToInt64(cmd.ExecuteScalar());
                 }
                 connection.Close();
@@ -61,14 +60,14 @@ namespace SV19T1081026.DataLayers.SqlServer
                     if (password.Equals(CryptHelper.EncodeMD5("*")))
                     {
                         cmd.CommandText = @"UPDATE UserAccount 
-                                        SET UserName = @UserName, FirstName = @FirstName, LastName = @LastName, Email = @Email, Phone = @Phone, IsLocked = @IsLocked, GroupName = @GroupName, Password = @Password
+                                        SET UserName = @UserName, FirstName = @FirstName, LastName = @LastName, Email = @Email, Phone = @Phone, IsLocked = @IsLocked
                                         WHERE UserId = @UserId;
                                         SELECT SCOPE_IDENTITY()";
                     }
                     else
                     {
                         cmd.CommandText = @"UPDATE UserAccount 
-                                        SET UserName = @UserName, FirstName = @FirstName, LastName = @LastName, Email = @Email, Phone = @Phone, Password = @Password, IsLocked = @IsLocked, GroupName = @GroupName
+                                        SET UserName = @UserName, FirstName = @FirstName, LastName = @LastName, Email = @Email, Phone = @Phone, Password = @Password, IsLocked = @IsLocked
                                         WHERE UserId = @UserId;
                                         SELECT SCOPE_IDENTITY()";
                     }
@@ -81,7 +80,6 @@ namespace SV19T1081026.DataLayers.SqlServer
                     cmd.Parameters.AddWithValue("@Email", data.Email);
                     cmd.Parameters.AddWithValue("@Phone", data.Phone);
                     cmd.Parameters.AddWithValue("@Password", data.Password);
-                    cmd.Parameters.AddWithValue("@GroupName", data.GroupName);
                     //cmd.Parameters.AddWithValue("@RegisteredTime", data.RegisteredTime);
                     cmd.Parameters.AddWithValue("@IsLocked", data.IsLocked);
                     result = cmd.ExecuteNonQuery();

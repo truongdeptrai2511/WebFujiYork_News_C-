@@ -1,20 +1,55 @@
 ﻿@model SV19T1081026.NewsPayper.Models.PostSearchOutput
+@{
+    string searchValue = "";
+    string categoryName = "";
+    if (ViewBag.CategoryName != null)
+    {
+        categoryName = ViewBag.CategoryName + " | ";
+    }
+    if (ViewBag.SearchValue != null)
+    {
+        searchValue = "Searching " + ViewBag.SearchValue + " | ";
+    }
+}
 <link href="~/style.css" rel="stylesheet" />
+
 <div class="content" style="word-spacing: -.31em; display: block; margin: 0px 0% 0 0%;height:30%">
     @foreach (var item in Model.Data)
     {
-        
+
         @*<div class="collumns"style="width:100%;">*@
-            <div class="collumn" style="font-size: 14px; line-height: 15px; width: 16.5%; display: inline-block; padding: 0 1% 0 1%; vertical-align: top; margin-bottom: 50px; transition: all .9s; border-left: 1.5px solid #2f2f2f ">
-                <div class="head"><span class="headline hl3" style="font-size:large; font-weight:800"><a href="~/Home/ShowPost/@item.PostId" style="text-decoration:none;">@item.Title</a></span><p><span class="headline hl4">Create time @item.CreatedTime</span></p></div>
-                <figure class="figure">
-                    @*<img class="media" src="C:/Users/phamd/OneDrive/Documents/Lap trinh web c#/Day2/SV19T1081026/SV19T1081026.NewsPayper/Uploads/@item.Image" alt="" style="-webkit-filter: sepia(80%) contrast(1) opacity(0.8); filter: sepia(80%) grayscale(1) contrast(1) opacity(0.8); mix-blend-mode: multiply; width: 100%;">*@
-                    <figcaption class="figcaption">***</figcaption>
-                    
-                </figure>
-                <asp:Image ID="Image1" runat="server" ImageUrl="~/images/" />
-                <div style="font-family: 'Droid Serif', serif; font-size: 14px; color: #2f2f2f">@item.BriefContent</div>
-            </div>
+        <div class="collumn" style="font-size: 14px; line-height: 15px; width: 16.5%; display: inline-block; padding: 0 1% 0 1%; vertical-align: top; margin-bottom: 50px; transition: all .9s; border-left: 1.5px solid #2f2f2f ">
+            <div class="head"><span class="headline hl3" style="font-size:large; font-weight:800"><a href="~/Home/ShowPost/@item.PostId" style="text-decoration:none;">@item.Title</a></span><p><span class="headline hl4">Create time @item.CreatedTime</span></p></div>
+            <figure class="figure">
+                @*<img class="media" src="C:/Users/phamd/OneDrive/Documents/Lap trinh web c#/Day2/SV19T1081026/SV19T1081026.NewsPayper/Uploads/@item.Image" alt="" style="-webkit-filter: sepia(80%) contrast(1) opacity(0.8); filter: sepia(80%) grayscale(1) contrast(1) opacity(0.8); mix-blend-mode: multiply; width: 100%;">*@
+                <figcaption class="figcaption">***</figcaption>
+
+            </figure>
+            <asp:Image ID="Image1" runat="server" ImageUrl="~/images/" />
+            <div style="font-family: 'Droid Serif', serif; font-size: 14px; color: #2f2f2f">@item.BriefContent</div>
+        </div>
         @*</div>*@
+    }
+
+</div>
+<div class="container pagination fix floatleft ">
+    @for (int page = 1; page <= ViewBag.PageCount; page++)
+    {
+        if (ViewBag.CategoryUrlName != null && ViewBag.SearchValue != null)
+        {
+            <a href="~/@ViewBag.CategoryUrlName?page=@page&searchValue=@ViewBag.SearchValue">@page</a>
+        }
+        else if (ViewBag.CategoryUrlName != null)
+        {
+            <a href="~/@ViewBag.CategoryUrlName?page=@page">@page</a>
+        }
+        else if (ViewBag.searchValue != null)
+        {
+            <a href="?page=@page&searchValue=@ViewBag.SearchValue">@page</a>
+        }
+        else
+        {
+            <a href="?page=@page">@page</a>
+        }
     }
 </div>

@@ -19,6 +19,7 @@ namespace SV19T1081026.NewsPayper.Models
         public Post DataPost { get; set; }
         public List<Post> Data { get; set; }
 
+        public Post AllowComment { get; set; }
 
     }
 }

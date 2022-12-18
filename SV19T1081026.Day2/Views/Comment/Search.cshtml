@@ -3,40 +3,56 @@
     Layout = null;
     ViewBag.Title = "Quản lý bình luận";
 }
+
 <div class="row">
     <div class="col-md-12">
-        Có tất cả @Model.RowCount bình luận. Bạn đang ở trang @Model.Page trên tổng số @Model.PageCount bình luận.
+        Có tất cả @Model.RowCount bình luận.
+        Bạn đang ở trang @Model.Page tren tổng số @Model.PageCount trang
     </div>
 </div>
 <div class="table-responsive">
-    <table class="table table-bordered table-hover">
+    <table class="table table-bordered table-hover table-striped">
         <thead>
             <tr class="bg-primary">
+                <th>Người đăng</th>
                 <th>Ngày tạo</th>
+                <th style="width: 400px">Tiêu đề bài viết</th>
                 <th>Nội dung bình luận</th>
-                <th style="width:100px">Chức năng</th>
+                <th>Bình luận</th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
             @foreach (var item in Model.Data)
             {
                 <tr>
+                    <td>@item.Commenter.FirstName @item.Commenter.LastName</td>
                     <td>@item.CreatedTime</td>
+                    <td>@item.Post.Title</td>
                     <td>@item.CommentContent</td>
-                    <td class="text-right">
-                        <a href="~/Category/Delete/@item.CommentId" class="btn btn-danger">
-                            <i class="glyphicon glyphicon-remove"></i>
-                        </a>
-                        <a href="~/Category/Edit/@item.CommentId" class="btn btn-default">
+                    <td class="text-center">
+                        @if (item.IsAccepted)
+                        {
+                            <p>Hiển thị</p>
+                        }
+                        else
+                        {
+                            <p>Bị ẩn</p>
+                        }
+                    </td>
+                    <td class=" text-right">
+                        <a href="~/Comment/Edit/@item.CommentId" class="btn btn-primary">
                             <i class="glyphicon glyphicon-edit"></i>
                         </a>
+
                     </td>
                 </tr>
             }
+
+
         </tbody>
     </table>
 </div>
-
 <div class="row">
     <div class="col-md-12 text-center">
         <ul class="pagination">
@@ -48,7 +64,7 @@
                 }
                 else
                 {
-                    <li><a href="javascripts:;" onclick="doSearch(@page)">@page</a></li>
+                    <li><a href="javascript:;" onclick="paginationSearch(@page)">@page</a></li>
                 }
             }
         </ul>

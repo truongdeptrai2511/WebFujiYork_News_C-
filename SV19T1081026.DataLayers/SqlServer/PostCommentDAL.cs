@@ -11,30 +11,56 @@ namespace SV19T1081026.DataLayers.SqlServer
 {
     public class PostCommentDAL : _BaseDAL, IPostCommentDAL
     {
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="connectionString"></param>
-        public PostCommentDAL(String connectionString) : base(connectionString) { }
-        public int Add(PostComment data)
+        public PostCommentDAL(string connectionString) : base(connectionString)
         {
-            int result = 0;
-            using (var connection = OpenConnection())
+        }
+
+        public long Add(PostComment data)
+        {
+            long postCommentId = 0;
+            using (SqlConnection connection = OpenConnection())
             {
                 using (SqlCommand cmd = connection.CreateCommand())
                 {
-                    cmd.CommandText = @"";
+                    cmd.CommandText = @"INSERT INTO PostComment(CreatedTime, CommentContent, IsAccepted, UserId, PostId)
+                                        VALUES(@CreatedTime, @CommentContent, @IsAccepted, @UserId, @PostId);
+                                        SELECT SCOPE_IDENTITY()";
                     cmd.CommandType = CommandType.Text;
-                    
+                    cmd.Parameters.AddWithValue("@CreatedTime", data.CreatedTime);
+                    cmd.Parameters.AddWithValue("@CommentContent", data.CommentContent ?? "");
+                    cmd.Parameters.AddWithValue("@IsAccepted", data.IsAccepted);
+                    cmd.Parameters.AddWithValue("@UserId", data.UserId);
+                    cmd.Parameters.AddWithValue("@PostId", data.PostId);
 
-                    result = Convert.ToInt32(cmd.ExecuteScalar());
+
+                    postCommentId = Convert.ToInt64(cmd.ExecuteScalar());
+                }
+                connection.Close();
+            }
+            return postCommentId;
+        }
+
+        public bool ChangeState(long postCommentId)
+        {
+            bool result = false;
+            using (SqlConnection connection = OpenConnection())
+            {
+                using (SqlCommand cmd = connection.CreateCommand())
+                {
+                    cmd.CommandText = @"UPDATE  PostComment
+                                        SET     IsAccepted = ~IsAccepted
+                                        WHERE   CommentId = @CommentId";
+                    cmd.CommandType = CommandType.Text;
+                    cmd.Parameters.AddWithValue("@CommentId", postCommentId);
+
+                    result = cmd.ExecuteNonQuery() > 0;
                 }
                 connection.Close();
             }
             return result;
         }
 
-        public int Count(string searchValue = "")
+        public int Count(string searchValue = "", long postId = 0)
         {
             if (searchValue != "")
                 searchValue = $"%{searchValue}%";
@@ -44,11 +70,15 @@ namespace SV19T1081026.DataLayers.SqlServer
             {
                 using (SqlCommand cmd = connection.CreateCommand())
                 {
-                    cmd.CommandText = @"SELECT COUNT(*) 
-                                        FROM PostComment
-                                        WHERE (@searchValue = '') OR (CreatedTime LIKE @searchValue)";
+                    cmd.CommandText = @"SELECT	COUNT(*)
+		                                FROM	PostComment as pc
+				                                JOIN Post as p on p.PostId = pc.PostId
+				                                JOIN UserAccount as u on u.UserId = pc.UserId
+		                                WHERE	((@searchValue = N'') OR (p.Title LIKE @searchValue) OR (u.UserName LIKE @searchValue)) 
+                                                AND ((@PostId = 0) OR (p.PostId = @PostId))";
                     cmd.CommandType = CommandType.Text;
                     cmd.Parameters.AddWithValue("@searchValue", searchValue);
+                    cmd.Parameters.AddWithValue("@PostId", postId);
 
                     count = Convert.ToInt32(cmd.ExecuteScalar());
                 }
@@ -57,16 +87,18 @@ namespace SV19T1081026.DataLayers.SqlServer
             return count;
         }
 
-        public bool Delete(int commentId)
+        public bool Delete(long postCommentId)
         {
             bool result = false;
-            using (var connection = OpenConnection())
+            using (SqlConnection connection = OpenConnection())
             {
                 using (SqlCommand cmd = connection.CreateCommand())
                 {
-                    cmd.CommandText = @"DELETE FROM PostComment WHERE CommentId = @commentId";
+                    cmd.CommandText = @"DELETE FROM PostComment
+                                        WHERE   CommentId = @CommentId";
                     cmd.CommandType = CommandType.Text;
-                    cmd.Parameters.AddWithValue("@commentId", commentId);
+                    cmd.Parameters.AddWithValue("@CommentId", postCommentId);
+
                     result = cmd.ExecuteNonQuery() > 0;
                 }
                 connection.Close();
@@ -74,16 +106,20 @@ namespace SV19T1081026.DataLayers.SqlServer
             return result;
         }
 
-        public PostComment Get(int commentId)
+        public PostComment Get(long postCommentId)
         {
             PostComment data = null;
             using (var connection = OpenConnection())
             {
                 using (SqlCommand cmd = connection.CreateCommand())
                 {
-                    cmd.CommandText = "SELECT * FROM PostComment WHERE CommentId = @commentId";
+                    cmd.CommandText = @"SELECT pc.*,p.Title,u.UserName,u.FirstName,u.LastName 
+                                        FROM PostComment as pc
+		                                     JOIN Post as p on p.PostId = pc.PostId
+		                                     JOIN UserAccount as u on u.UserId = pc.UserId
+                                        WHERE pc.CommentId = @CommentId";
                     cmd.CommandType = CommandType.Text;
-                    cmd.Parameters.AddWithValue("@CommentId", commentId);
+                    cmd.Parameters.AddWithValue("@CommentId", postCommentId);
                     using (SqlDataReader dbReader = cmd.ExecuteReader(CommandBehavior.CloseConnection))
                     {
                         if (dbReader.Read())
@@ -93,6 +129,21 @@ namespace SV19T1081026.DataLayers.SqlServer
                                 CommentId = Convert.ToInt32(dbReader["CommentId"]),
                                 CreatedTime = Convert.ToDateTime(dbReader["CreatedTime"]),
                                 CommentContent = Convert.ToString(dbReader["CommentContent"]),
+                                IsAccepted = Convert.ToBoolean(dbReader["IsAccepted"]),
+                                UserId = Convert.ToInt32(dbReader["UserId"]),
+                                PostId = Convert.ToInt32(dbReader["PostId"]),
+                                Commenter = new UserAccount()
+                                {
+                                    UserId = Convert.ToInt32(dbReader["PostId"]),
+                                    UserName = Convert.ToString(dbReader["UserName"]),
+                                    FirstName = Convert.ToString(dbReader["FirstName"]),
+                                    LastName = Convert.ToString(dbReader["LastName"]),
+                                },
+                                Post = new Post()
+                                {
+                                    PostId = Convert.ToInt32(dbReader["PostId"]),
+                                    Title = Convert.ToString(dbReader["Title"]),
+                                }
                             };
                         }
                     }
@@ -102,60 +153,7 @@ namespace SV19T1081026.DataLayers.SqlServer
             return data;
         }
 
-        public PostComment Get(string commentContent)
-        {
-            PostComment data = null;
-            using (var connection = OpenConnection())
-            {
-                using (SqlCommand cmd = connection.CreateCommand())
-                {
-                    cmd.CommandText = "SELECT * FROM PostComment WHERE CommentContent = @commentContent";
-                    cmd.CommandType = CommandType.Text;
-                    cmd.Parameters.AddWithValue("@CommentContent", commentContent);
-                    using (SqlDataReader dbReader = cmd.ExecuteReader(CommandBehavior.CloseConnection))
-                    {
-                        if (dbReader.Read())
-                        {
-                            data = new PostComment()
-                            {
-                                CommentId = Convert.ToInt32(dbReader["CommentId"]),
-                                CreatedTime = Convert.ToDateTime(dbReader["CreatedTime"]),
-                                CommentContent = Convert.ToString(dbReader["CommentContent"]),
-                            };
-                        }
-                    }
-                }
-                connection.Close();
-            }
-            return data;
-        }
-
-        public bool InUsed(int commentId)
-        {
-            bool result = false;
-            using (var connection = OpenConnection())
-            {
-                using (var cmd = connection.CreateCommand())
-                {
-                    cmd.CommandText = @"SELECT	CASE 
-			                                WHEN EXISTS(SELECT * FROM PostComment WHERE CommentId = @commentId) THEN 1
-			                                ELSE 0
-		                                END AS InUsed";
-                    cmd.CommandType = CommandType.Text;
-                    cmd.Parameters.AddWithValue("@CommentId", commentId);
-                    result = Convert.ToBoolean(cmd.ExecuteScalar());
-                }
-                connection.Close();
-            }
-            return result;
-        }
-
-        public bool IsAccepted(int commentId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IList<PostComment> List(int page = 1, int pageSize = 20, string searchValue = "")
+        public IList<PostComment> List(int page = 1, int pageSize = 20, string searchValue = "", long postId = 0)
         {
             if (searchValue != "")
                 searchValue = $"%{searchValue}%";
@@ -167,15 +165,19 @@ namespace SV19T1081026.DataLayers.SqlServer
                 {
                     cmd.CommandText = @"SELECT *
                                         FROM (
-		                                        SELECT	*, ROW_NUMBER() OVER(ORDER BY CommentId) AS RowNumber
-		                                        FROM	PostComment
-		                                        WHERE	(@searchValue = N'') OR (CommentContent LIKE @searchValue)
+		                                        SELECT	pc.*,p.Title,u.UserName,u.FirstName,u.LastName, ROW_NUMBER() OVER(ORDER BY pc.CommentId DESC) AS RowNumber
+		                                        FROM	PostComment as pc
+				                                        JOIN Post as p on p.PostId = pc.PostId
+				                                        JOIN UserAccount as u on u.UserId = pc.UserId
+		                                        WHERE	((@searchValue = N'') OR (p.Title LIKE @searchValue) OR (u.UserName LIKE @searchValue)) 
+                                                        AND ((@PostId = 0) OR (p.PostId = @PostId))
 	                                        ) AS c
-                                        WHERE (@pageSize = 0) OR (c.RowNumber BETWEEN (@page - 1) * @pageSize + 1 AND @page * @pageSize)
+                                        WHERE @pageSize = 0 OR ( c.RowNumber BETWEEN (@page - 1) * @pageSize + 1 AND @page * @pageSize)
                                         ORDER BY c.RowNumber;";
                     cmd.CommandType = CommandType.Text;
                     cmd.Parameters.AddWithValue("@page", page);
                     cmd.Parameters.AddWithValue("@pageSize", pageSize);
+                    cmd.Parameters.AddWithValue("@PostId", postId);
                     cmd.Parameters.AddWithValue("@searchValue", searchValue);
 
                     using (SqlDataReader dbReader = cmd.ExecuteReader(CommandBehavior.CloseConnection))
@@ -187,6 +189,21 @@ namespace SV19T1081026.DataLayers.SqlServer
                                 CommentId = Convert.ToInt32(dbReader["CommentId"]),
                                 CreatedTime = Convert.ToDateTime(dbReader["CreatedTime"]),
                                 CommentContent = Convert.ToString(dbReader["CommentContent"]),
+                                IsAccepted = Convert.ToBoolean(dbReader["IsAccepted"]),
+                                UserId = Convert.ToInt32(dbReader["UserId"]),
+                                PostId = Convert.ToInt32(dbReader["PostId"]),
+                                Commenter = new UserAccount()
+                                {
+                                    UserId = Convert.ToInt32(dbReader["PostId"]),
+                                    UserName = Convert.ToString(dbReader["UserName"]),
+                                    FirstName = Convert.ToString(dbReader["FirstName"]),
+                                    LastName = Convert.ToString(dbReader["LastName"]),
+                                },
+                                Post = new Post()
+                                {
+                                    PostId = Convert.ToInt32(dbReader["PostId"]),
+                                    Title = Convert.ToString(dbReader["Title"]),
+                                }
                             });
                         }
                         dbReader.Close();
@@ -195,27 +212,6 @@ namespace SV19T1081026.DataLayers.SqlServer
                 connection.Close();
             }
             return data;
-        }
-
-        public bool Update(PostComment data)
-        {
-            bool result = false;
-            using (var connection = OpenConnection())
-            {
-                using (SqlCommand cmd = connection.CreateCommand())
-                {
-                    cmd.CommandText = @"UPDATE PostComment 
-                                        SET CommentContent = @CommentContent, CreatedTime = @CreatedTime 
-                                        WHERE CommentId = @CommentId";
-                    cmd.CommandType = System.Data.CommandType.Text;
-                    cmd.Parameters.AddWithValue("@CommentId", data.CommentId);
-                    cmd.Parameters.AddWithValue("@CommentContent", data.CommentContent);
-                    cmd.Parameters.AddWithValue("@CreatedTime", data.CreatedTime);
-                    result = cmd.ExecuteNonQuery() > 0;
-                }
-                connection.Close();
-            }
-            return result;
         }
     }
 }

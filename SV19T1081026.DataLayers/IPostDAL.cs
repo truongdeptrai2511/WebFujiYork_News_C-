@@ -21,7 +21,15 @@ namespace SV19T1081026.DataLayers
         /// <param name="categoryId"></param>
         /// <returns></returns>
         IList<Post> List(int page = 1, int pageSize = 20, string searchValue = "", int categoryId = 0);
-        IList<Post> ShowScreenNews(int page = 1, int pageSize = 2, string searchValue = "", int postId = 0);
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="page"></param>
+        /// <param name="pageSize"></param>
+        /// <param name="searchValue"></param>
+        /// <param name="categoryId"></param>
+        /// <returns></returns>
+        IList<Post> ListUser(int page = 1, int pageSize = 20, string searchValue = "", int categoryId = 0);
         /// <summary>
         /// 
         /// </summary>
@@ -29,6 +37,13 @@ namespace SV19T1081026.DataLayers
         /// <param name="categoryId"></param>
         /// <returns></returns>
         int Count(string searchValue = "", int categoryId = 0);
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="searchValue"></param>
+        /// <param name="categoryId"></param>
+        /// <returns></returns>
+        int CountNotHide(string searchValue = "", int categoryId = 0);
         /// <summary>
         /// 
         /// </summary>

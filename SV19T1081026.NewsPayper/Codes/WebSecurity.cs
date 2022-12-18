@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using System.Security.Principal;
 
-namespace SV19T1081026.NewsPayper.Codes
+namespace SV19T1081026.NewsPayper
 {
     /// <summary>
     /// 

@@ -428,5 +428,74 @@ namespace SV19T1081026.DataLayers.SqlServer
             }
             return data;
         }
+
+        public IList<Post> ListUser(int page = 1, int pageSize = 20, string searchValue = "", int categoryId = 0)
+        {
+            if (searchValue != "")
+                searchValue = $"%{searchValue}%";
+
+            List<Post> data = new List<Post>();
+            using (SqlConnection connection = OpenConnection())
+            {
+                using (SqlCommand cmd = connection.CreateCommand())
+                {
+                    cmd.CommandText = @"SELECT  p.*,
+                                                u.UserName, u.FirstName, u.LastName, u.Email, u.Phone,
+                                                c.CategoryName, c.CategoryUrlName, c.CategoryDescriptions, c.DisplayOrder
+                                        FROM
+	                                        (
+		                                        SELECT	p.PostId, p.CreatedTime, p.Title, p.BriefContent, N'' as FullContent,
+				                                        p.UrlTitle, p.Image, p.AllowComment, p.IsHidden, p.UserId, p.CategoryId,
+				                                        ROW_NUMBER() OVER (ORDER BY p.PostId DESC) AS RowNumber
+		                                        FROM	Post as p
+		                                        WHERE	((@SearchValue = N'') OR (p.Title LIKE @SearchValue))
+			                                        AND	((@CategoryId = 0) OR (p.CategoryId = @CategoryId)) AND p.IsHidden = 0
+	                                        ) as p
+                                            LEFT JOIN UserAccount as u ON p.UserId = u.UserId
+                                            LEFT JOIN PostCategory as c ON p.CategoryId = c.CategoryId
+                                        WHERE p.RowNumber BETWEEN (@Page - 1) * @PageSize + 1 AND @Page * @PageSize 
+                                        ORDER BY p.RowNumber";
+                    cmd.CommandType = CommandType.Text;
+                    cmd.Parameters.AddWithValue("@Page", page);
+                    cmd.Parameters.AddWithValue("@PageSize", pageSize);
+                    cmd.Parameters.AddWithValue("@SearchValue", searchValue ?? "");
+                    cmd.Parameters.AddWithValue("@CategoryId", categoryId);
+                    using (SqlDataReader dbReader = cmd.ExecuteReader(CommandBehavior.CloseConnection))
+                    {
+                        while (dbReader.Read())
+                        {
+                            data.Add(CreatePostFromDbReader(dbReader));
+                        }
+                        dbReader.Close();
+                    }
+                }
+                connection.Close();
+            }
+            return data;
+        }
+
+        public int CountNotHide(string searchValue = "", int categoryId = 0)
+        {
+            if (searchValue != "")
+                searchValue = $"%{searchValue}%";
+
+            int result = 0;
+            using (SqlConnection connection = OpenConnection())
+            {
+                using (SqlCommand cmd = connection.CreateCommand())
+                {
+                    cmd.CommandText = @"SELECT	COUNT(*)
+                                        FROM	Post as p
+                                        WHERE	((@SearchValue = N'') OR (p.Title LIKE @SearchValue))
+	                                        AND	((@CategoryId = 0) OR (p.CategoryId = @CategoryId)) AND p.IsHidden = 0";
+                    cmd.CommandType = CommandType.Text;
+                    cmd.Parameters.AddWithValue("@SearchValue", searchValue);
+                    cmd.Parameters.AddWithValue("@CategoryId", categoryId);
+                    result = Convert.ToInt32(cmd.ExecuteScalar());
+                }
+                connection.Close();
+            }
+            return result;
+        }
     }
 }

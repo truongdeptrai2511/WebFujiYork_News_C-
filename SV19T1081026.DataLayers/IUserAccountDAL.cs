@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using SV19T1081026.DomainModels;
+
+using System.Data.SqlClient;
+using SV19T1081026.Lib;
 
 namespace SV19T1081026.DataLayers
 {
