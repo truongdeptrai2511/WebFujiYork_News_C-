@@ -28,7 +28,7 @@ namespace SV19T1081026.NewsPayper
         {
             List<Post> list = new List<Post>();
             int a;
-            foreach (var item in ContentService.ListPostsUser(1, 3, "", 0, out a))
+            foreach (var item in ContentService.ListPostsUser(1, 10, "", 0, out a))
             {
                 list.Add(item);
             }

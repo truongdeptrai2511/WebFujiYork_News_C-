@@ -26,10 +26,11 @@ namespace SV19T1081026.NewsPayper.Controllers
                     CategoryId = 0
                 };
             }
+            
 
             return View(model);
         }
-        public ActionResult Search(Models.PostSearchInput input, string id, string categoryUrlName = "")
+        public ActionResult Search(Models.PostSearchInput input, string id, string categoryUrlName = "", string searchValue = "")
         {
             int rowCount = 0;
             int categoryId = 0;
@@ -39,6 +40,10 @@ namespace SV19T1081026.NewsPayper.Controllers
                 ViewBag.CategoryUrlName = category.CategoryUrlName;
                 ViewBag.CategoryName = category.CategoryName;
                 categoryId = category.CategoryId;
+            }
+            if (searchValue != "")
+            {
+                ViewBag.SearchValue = searchValue;
             }
             if (input.Page <= 0) input.Page = 1;
             if (input.PageSize <= 0) input.PageSize = WebConfig.DefaultPageSize;

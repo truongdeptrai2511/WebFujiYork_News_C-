@@ -2,86 +2,99 @@
 @{
     var item = Model.DataPost;
     {
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+        <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.1/dist/jquery.slim.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
         <link href="~/Themes/responsive.css" rel="stylesheet" media="screen">
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
         <script src="~/Themes/bower_components/jquery/dist/jquery.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
         <link href="~/Themes/style.css" rel="stylesheet" media="screen">
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
-        <div class="body-content" style="font-size: 14px; line-height: 15px; width: 100%; display: block; padding-right:4%;padding-left:2%; vertical-align: top; margin-bottom: 50px; transition: all .9s; ">
-            <div class="head">
-                <span class="headline hl3" style="font-size:large; font-weight:800">
-                    <p style="font-family: 'Droid Serif', serif; color: #2f2f2f; font-size:25px">
-                        @item.Title
+
+        <div class="col col-lg-8" style="display:contents; float:left;">
+            <div class="body-content" style="border-right:1px solid grey;font-size: 14px; line-height: 15px; width: 100%; display: block; padding-right:4%;padding-left:2%; vertical-align: top; margin-bottom: 50px; transition: all .9s; ">
+                <div class="head">
+                    <span class="headline hl3" style="font-size:large; font-weight:800">
+                        <p style="font-family: 'Droid Serif', serif; color: #2f2f2f; font-size:25px">
+                            @item.Title
+                        </p>
+                    </span>
+                    <p>
+                        <span class="headline hl4">Create time @item.CreatedTime</span>
                     </p>
-                </span>
-                <p>
-                    <span class="headline hl4">Create time @item.CreatedTime</span>
-                </p>
-            </div>
-            <div>
-                <p style="font-family: 'Droid Serif', serif; color: #2f2f2f; font-size: 19px; word-spacing: .15em; line-height: normal">
+                </div>
+                <div>
+                    <p style="font-family: 'Droid Serif', serif; color: #2f2f2f; font-size: 19px; word-spacing: .15em; line-height: normal">
 
-                    @Html.Raw(item.FullContent)
+                        @Html.Raw(item.FullContent)
 
-                </p>
-            </div>
-            @if (item.AllowComment == true)
-
-            {
+                    </p>
+                </div>
+                @if (item.AllowComment == true)
 
                 {
-                    var listComments = ViewBag.ListComments as List<SV19T1081026.DomainModels.PostComment>;
-                    foreach (var itemcmt in listComments)
+
                     {
-                        if (itemcmt.IsAccepted)
+                        var listComments = ViewBag.ListComments as List<SV19T1081026.DomainModels.PostComment>;
+                        <div class="card card-text" style="width:100%;height:1%; margin:0 auto; padding:10px;">
+
+                            @foreach (var itemcmt in listComments)
+                            {
+                                if (itemcmt.IsAccepted)
+                                {
+
+                                    <div class="card-header color-grey-hover" border-block:30px; height:35px;">
+                                        <h5 class="mr-2">@itemcmt.Commenter.FirstName @itemcmt.Commenter.LastName</h5>
+                                    </div>
+                                    <div class="card-body" style="height: 50px;">
+                                        <p>@itemcmt.CommentContent</p>
+                                    </div>
+
+                                }
+                            }
+                        </div>
+                    }
+                    {
+                        var userData = User.GetUserData();
+                        if (userData == null)
                         {
-                            <div class="footer-text" style="width:100%;height:5%; margin:0 auto; padding:5%;">
-                                <div class="row">
-                                    <h5 class="mr-2">@itemcmt.Commenter.FirstName @itemcmt.Commenter.LastName</h5><span class="dot mb-1"></span>
-                                </div>
-                                <p>@itemcmt.CommentContent</p>
-                                <p>@itemcmt.CreatedTime</p>
-
-                            </div>
+                            <span>
+                                Bạn phải <a href="#" data-toggle="modal" data-target="#loginModal" id="myBtn1">Đăng nhập</a> để có thể bình luận!!
+                            </span>
                         }
+                        else
+                        {
+                            <form action="~/Home/Comment" method="post">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="PostId" value="@Model.PostId" />
+                                <input type="hidden" name="UserId" value="@User.GetUserData().UserId" />
+                                <div class="py-3 border-0">
+                                    <div class="d-flex flex-start w-100">
 
-                    }
+                                        <div class="form-outline w-100">
+                                            <textarea class="form-control" id="textAreaExample" rows="4"
+                                                      style="background: #fff;resize: none" placeholder="Nhập bình luận..." name="CommentContent"></textarea>
 
-                }
-                {
-                    var userData = User.GetUserData();
-                    if (userData == null)
-                    {
-        <span>
-            Bạn phải <a href="#" data-toggle="modal" data-target="#loginModal" id="myBtn">Đăng nhập</a> để có thể bình luận!!
-        </span>
-                    }
-                    else 
-                    {
-                        <form action="~/Home/Comment" method="post">
-                            @Html.AntiForgeryToken()
-                            <input type="hidden" name="PostId" value="@Model.PostId" />
-                            <input type="hidden" name="UserId" value="@User.GetUserData().UserId" />
-                            <div class="py-3 border-0">
-                                <div class="d-flex flex-start w-100">
-
-                                    <div class="form-outline w-100">
-                                        <textarea class="form-control" id="textAreaExample" rows="4"
-                                                  style="background: #fff;resize: none" placeholder="Nhập bình luận..." name="CommentContent"></textarea>
-
+                                        </div>
+                                    </div>
+                                    <div class="btn-google">
+                                        <button type="submit" class="btn btn-sm" style="background-color:blanchedalmond">Post comment</button>
                                     </div>
                                 </div>
-                                <div class="float-end mt-2 pt-1">
-                                    <button type="submit" class="btn btn-primary btn-sm">Post comment</button>
-                                </div>
-                            </div>
-                        </form>
+                            </form>
+                        }
                     }
                 }
-            }
+            </div>
         </div>
+        <script>
+            $(document).ready(function () {
+                $("#myBtn1").click(function () {
+                    $("#loginModal").modal();
+                });
+            });
+        </script>
     }
 }
 

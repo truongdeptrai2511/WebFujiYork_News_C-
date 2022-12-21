@@ -1,0 +1,71 @@
+﻿@model SV19T1081026.NewsPayper.Models.PostSearchOutput
+@{
+    string searchValue = "";
+    string categoryName = "";
+    if (ViewBag.CategoryName != null)
+    {
+        categoryName = ViewBag.CategoryName + " | ";
+    }
+    if (ViewBag.SearchValue != null)
+    {
+        searchValue = "Searching " + ViewBag.SearchValue + " | ";
+    }
+    List<SelectListItem> listCategories = SelectListHelper.PostCategories();
+    listCategories.Insert(0, new SelectListItem() { Value = "0", Text = "-- Tất cả phân loại tin --" });
+    List<SV19T1081026.DomainModels.Post> list3Post = SelectListHelper.Get3Post();
+}
+<link href="~/style.css" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.1/dist/jquery.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+<link href='https://fonts.googleapis.com/css?family=Vesper Libre' rel='stylesheet'>
+
+<link href='https://fonts.googleapis.com/css?family=Neuton' rel='stylesheet'>
+
+<style>
+    /* width */
+    ::-webkit-scrollbar {
+        width: 5px;
+        height: 10px;
+    }
+
+    /* Track */
+    ::-webkit-scrollbar-track {
+        box-shadow: inset 0 0 1px white;
+        border-radius: 10px;
+    }
+
+    /* Handle */
+    ::-webkit-scrollbar-thumb {
+        background: #808080;
+        border-radius: 5px;
+        opacity: 0.1;
+    }
+
+        /* Handle on hover */
+        ::-webkit-scrollbar-thumb:hover {
+            background: #808080;
+        }
+</style>
+<div class="row" style=" height:800px; overflow-y:auto ; overflow-x:hidden;">
+    <div class="col col-lg-4" style="width:fit-content;">
+        <div class="list-group list-group-flush">
+            @foreach (var item in list3Post)
+            {
+                <div class="list-group-item">
+                    <div class="fc-list-item" style="padding-top:15px">
+                        <img src="http://localhost:50493/@item.Image" style="width:200px" />
+                    </div>
+                    <div class="fc-list-item" style="width:400px; padding-top:15px">
+                        <a href="~/Home/ShowPost/@item.PostId" style="font-family: 'Neuton', serif; font-size: 20px; color: #2f2f2f;line-height:normal; float:left; font-weight:bold">@item.Title</a>
+                    </div>
+                    <div class="fc-list-item" style="width:380px">
+                        <div style="font-family: 'Neuton', serif; font-size: 15px; color: #2f2f2f; float: right; line-height: normal ">@item.BriefContent</div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+

@@ -30,6 +30,7 @@ namespace SV19T1081026.DataLayers
         /// <param name="categoryId"></param>
         /// <returns></returns>
         IList<Post> ListUser(int page = 1, int pageSize = 20, string searchValue = "", int categoryId = 0);
+        IList<Post> ShowScreenNew(int page = 1, int pageSize = 20, string searchValue = "", int categoryId = 0);
         /// <summary>
         /// 
         /// </summary>

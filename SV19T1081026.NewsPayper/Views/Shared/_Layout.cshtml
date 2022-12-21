@@ -25,6 +25,7 @@
     <!-- Design fonts -->
     <link href="https://fonts.googleapis.com/css?family=Ubuntu:300,400,400i,500,700" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,500,700,900" rel="stylesheet">
+    <link href='https://fonts.googleapis.com/css?family=Neuton' rel='stylesheet'>
 
     <!-- Bootstrap core CSS -->
     <link href="~/css/bootstrap.css" rel="stylesheet">
@@ -87,26 +88,27 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body" style="font-family: 'Droid Serif', serif; font-size: 20px; color: #2f2f2f; line-height: normal;">
                     <div class="form-title text-center">
-                        <h4>Đăng nhập</h4>
+                        <h3 style="font-family:'Droid Serif' , serif; font-size: 20px; color: #2f2f2f;line-height:normal;">
+                        Đăng nhập</h3>
                     </div>
                     <div class="d-flex flex-column text-center">
                         <form id="formLogin" action="~/Home/Login" method="post">
                             <div id="LoginModal">
                                 @Html.Partial("Login")
                             </div>
-                            <button type="button" id="btnSubmit" class="btn btn-info btn-block btn-round">Đăng nhập</button>
+                            <button type="button" id="btnSubmit" class="btn btn-info btn-block btn-round" style="background-color:black; color:white">Đăng nhập</button>
                         </form>
                     </div>
                 </div>
                 <div class="modal-footer d-flex justify-content-center">
-                    <div class="signup-section">Bạn chưa có tài khoản? <a href="#" onclick="clickSignUp()">Đăng ký</a>.</div>
+                    <div class="signup-section" style="font-family: 'Droid Serif', serif; font-size: 20px; color: #2f2f2f; line-height: normal;">Bạn chưa có tài khoản? <a href="#" onclick="clickSignUp()" style="font-family: 'Droid Serif', serif; font-size: 20px; color: #2f2f2f; line-height: normal;">Đăng ký</a>.</div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="modal fade" id="loginModal1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="loginModal1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="font-family: 'Droid Serif', serif; font-size: 20px; color: #2f2f2f; line-height: normal;">
 
         <div class="modal-dialog modal-lg modal-dialog-centered" role="document" style="overflow-y: initial !important">
             <div class="modal-content">
@@ -116,8 +118,8 @@
                     </button>
                 </div>
                 <div class="modal-body" style="height: 80vh; overflow-y: auto; ">
-                    <div class="form-title text-center">
-                        <h4>Đăng ký</h4>
+                    <div class="form-title text-center" style="font-family: 'Droid Serif', serif; font-size: 20px; color: #2f2f2f; line-height: normal;">
+                        <h4 style="font-family: 'Droid Serif', serif; font-size: 20px; color: #2f2f2f; line-height: normal;">Đăng ký</h4>
                     </div>
                     <div id="register" class="box box-primary">
                         @Html.Partial("_Register")
@@ -134,15 +136,16 @@
                 @if (userData == null)
                 {
                     <li>
-                        <a href="#" data-toggle="modal" data-target="#loginModal" id="myBtn">Đăng nhập</a>
+                        <a href="#" data-toggle="modal" data-target="#loginModal" id="myBtn" style="font-family:'Droid Serif' , serif; font-size: 20px; color: #2f2f2f;line-height:normal;">
+                        Đăng nhập</a>
                     </li>
                 }
                 else
                 {
                     <li>
-                        <a href="#">Hello, @userData.FullName</a>
+                        <a href="#" style="font-family: 'Droid Serif', serif; font-size: 20px; color: #2f2f2f; line-height: normal;">Hello, @userData.FullName</a>
                     </li>
-                    <li><a href="~/Home/Logout">Đăng xuất</a></li>
+                    <li><a href="~/Home/Logout" style="font-family: 'Droid Serif', serif; font-size: 20px; color: #2f2f2f; line-height: normal;">Đăng xuất</a></li>
                 }
 
             </ul>
@@ -155,9 +158,18 @@
         @Html.Partial("_Header")
         <!-- =============================================== -->
         <!-- Left side column. contains the sidebar -->
-        @{Html.RenderAction("_MenuBar"); }
+        <div class="row">
+            <div class="col-8">@{Html.RenderAction("_MenuBar"); }</div>
 
-        <!-- =============================================== -->
+            <!-- =============================================== -->
+            <div class="col-4">
+                <form action="~/" method="get">
+                    <input class="form-control" type="text" name="searchValue" value="" placeholder="Nhập và ấn enter" style="width: 300px; display: inline-block; font-family: 'Droid Serif', serif; font-size: 20px; color: #2f2f2f; line-height: normal;" />
+                    <button class="btn btn-primary" style="color: black; font-family: 'Droid Serif', serif; font-size: 20px; color: #2f2f2f; line-height: normal; background-color: white; border: 1px solid grey; margin-top: -5px">Tìm kiếm</button>
+                </form>
+
+            </div>
+        </div>
         <!-- Content Wrapper. Contains page content -->
         <div class="content-wrapper">
             <!-- Content Header (Page header) -->
@@ -166,11 +178,18 @@
                     @ViewBag.Title
                 </h1>
             </section>
-
-            <!-- Main content -->
+            
             <section class="content" style="width: 100%; display: block; word-spacing: -.31em; display: inline-block; margin: 30px 2% 0 2%;">
-                @RenderBody()
+                <div class="row">
+                    <div class="col-lg-8" style="display:inline-block; float:left;width:fit-content">
+                        @RenderBody()
+                    </div>
+                    <div class="col-lg-4" style="float:right;width:fit-content">
+                        @{ Html.RenderPartial("_Aside");}
+                    </div>
+                </div>
             </section>
+            <!-- Main content -->
             <!-- /.content -->
         </div>
         <!-- /.content-wrapper -->
@@ -181,7 +200,7 @@
         @*@Html.Partial("_ControlSideBar")*@
         <!-- /.control-sidebar -->
         <!-- Add the sidebar's background. This div must be placed
-         immediately after the control sidebar -->
+     immediately after the control sidebar -->
         <div class="control-sidebar-bg"></div>
     </div>
     <!-- ./wrapper -->

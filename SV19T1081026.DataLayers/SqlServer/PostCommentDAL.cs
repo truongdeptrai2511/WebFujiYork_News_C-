@@ -18,6 +18,9 @@ namespace SV19T1081026.DataLayers.SqlServer
         public long Add(PostComment data)
         {
             long postCommentId = 0;
+            bool itemIsAccepted = data.IsAccepted;
+            long isAccepted = Convert.ToInt32(itemIsAccepted);
+            isAccepted = 1;
             using (SqlConnection connection = OpenConnection())
             {
                 using (SqlCommand cmd = connection.CreateCommand())
@@ -28,7 +31,7 @@ namespace SV19T1081026.DataLayers.SqlServer
                     cmd.CommandType = CommandType.Text;
                     cmd.Parameters.AddWithValue("@CreatedTime", data.CreatedTime);
                     cmd.Parameters.AddWithValue("@CommentContent", data.CommentContent ?? "");
-                    cmd.Parameters.AddWithValue("@IsAccepted", data.IsAccepted);
+                    cmd.Parameters.AddWithValue("@IsAccepted", isAccepted);
                     cmd.Parameters.AddWithValue("@UserId", data.UserId);
                     cmd.Parameters.AddWithValue("@PostId", data.PostId);
 

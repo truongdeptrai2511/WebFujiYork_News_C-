@@ -2,12 +2,15 @@
 @{ Layout = null;}
 
 <link href="~/Css/style.css" rel="stylesheet" />
-@foreach(var item in Model.Data)
+<link href="~/fonts/Merriweather-BoldItalic.ttf" rel="stylesheet" />
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+@foreach (var item in Model.Data)
 {
-    <div class="table" style="float: left; padding: 5px; margin: 0 auto; width: 15%;display:block">
+    <div class="col col-12" style="float: left; padding: 5px; margin: 0 auto; width: 16%;display:block;">
         <div class="row" style="float:inline-start; text-align: center;">
-            <a href="~/Home/Search/@item.CategoryId" style="font-family: 'Playfair Display',serif; text-decoration: none; color: black; font-weight: normal">
-                <h4 style="font-family: 'Playfair Display',serif;font-weight: normal; padding-left:50px">@item.CategoryName</h4>
+            <a href="~/Home/Search/@item.CategoryId" style="font-family: 'Neuton'; text-decoration: none; color: black; font-weight: normal ">
+                <h4 style="font-family: 'Neuton'; font-weight: normal; padding-left: 50px ">@item.CategoryName</h4>
             </a>
         </div>
     </div>

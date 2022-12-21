@@ -353,82 +353,6 @@ namespace SV19T1081026.DataLayers.SqlServer
             return result;
         }
 
-        public IList<Post> ShowScreenNews(int page = 1, int pageSize = 2, string searchValue = "", int postId = 0)
-        {
-            if (searchValue != "")
-                searchValue = $"%{searchValue}%";
-
-            List<Post> data = new List<Post>();
-            using (SqlConnection connection = OpenConnection())
-            {
-                using (SqlCommand cmd = connection.CreateCommand())
-                {
-                    //SqlDataReader dbReader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
-                    cmd.CommandText = @"SELECT  p.*,
-                                                u.UserName, u.FirstName, u.LastName, u.Email, u.Phone,
-                                                c.CategoryName, c.CategoryUrlName, c.CategoryDescriptions, c.DisplayOrder
-                                        FROM
-	                                        (
-		                                        SELECT	p.PostId, p.CreatedTime, p.Title, p.BriefContent, N'' as FullContent,
-				                                        p.UrlTitle, p.Image, p.AllowComment, p.IsHidden, p.UserId, p.CategoryId,
-				                                        ROW_NUMBER() OVER (ORDER BY p.PostId DESC) AS RowNumber
-		                                        FROM	Post as p
-		                                        WHERE	((@SearchValue = N'') OR (p.Title LIKE @SearchValue))
-			                                        AND	((@CategoryId = 0) OR (p.CategoryId = @CategoryId))
-	                                        ) as p
-                                            LEFT JOIN UserAccount as u ON p.UserId = u.UserId
-                                            LEFT JOIN PostCategory as c ON p.CategoryId = c.CategoryId
-                                        WHERE p.RowNumber BETWEEN (@Page - 1) * @PageSize + 1 AND @Page * @PageSize 
-                                        ORDER BY p.RowNumber";
-                    cmd.CommandType = CommandType.Text;
-                    cmd.Parameters.AddWithValue("@Page", page);
-                    cmd.Parameters.AddWithValue("@PageSize", pageSize);
-                    cmd.Parameters.AddWithValue("@SearchValue", searchValue ?? "");
-                    cmd.Parameters.AddWithValue("@CategoryId", postId);
-                    SqlDataReader dbReader = cmd.ExecuteReader();
-
-                    while (dbReader.Read())
-                    {
-                        data.Add(new Post()
-                        {
-                            PostId = Convert.ToInt64(dbReader["PostId"]),
-                            CreatedTime = Convert.ToDateTime(dbReader["CreatedTime"]),
-                            Title = Convert.ToString(dbReader["Title"]),
-                            BriefContent = Convert.ToString(dbReader["BriefContent"]),
-                            FullContent = Convert.ToString(dbReader["FullContent"]),
-                            UrlTitle = Convert.ToString(dbReader["UrlTitle"]),
-                            Image = Convert.ToString(dbReader["Image"]),
-                            AllowComment = Convert.ToBoolean(dbReader["AllowComment"]),
-                            IsHidden = Convert.ToBoolean(dbReader["IsHidden"]),
-                            UserId = Convert.ToInt64(dbReader["UserId"]),
-                            CategoryId = Convert.ToInt32(dbReader["CategoryId"]),
-                            Creator = new Author()
-                            {
-                                UserId = Convert.ToInt64(dbReader["UserId"]),
-                                UserName = Convert.ToString(dbReader["UserName"]),
-                                FirstName = Convert.ToString(dbReader["FirstName"]),
-                                LastName = Convert.ToString(dbReader["LastName"]),
-                                Email = Convert.ToString(dbReader["Email"]),
-                                Phone = Convert.ToString(dbReader["Phone"])
-                            },
-                            Category = new PostCategory()
-                            {
-                                CategoryId = Convert.ToInt32(dbReader["CategoryId"]),
-                                CategoryName = Convert.ToString(dbReader["CategoryName"]),
-                                CategoryUrlName = Convert.ToString(dbReader["CategoryUrlName"]),
-                                CategoryDescriptions = Convert.ToString(dbReader["CategoryDescriptions"]),
-                                DisplayOrder = Convert.ToInt32(dbReader["DisplayOrder"])
-                            }
-                        });
-                    }
-                    dbReader.Close();
-
-                }
-                connection.Close();
-            }
-            return data;
-        }
-
         public IList<Post> ListUser(int page = 1, int pageSize = 20, string searchValue = "", int categoryId = 0)
         {
             if (searchValue != "")
@@ -496,6 +420,82 @@ namespace SV19T1081026.DataLayers.SqlServer
                 connection.Close();
             }
             return result;
+        }
+
+        public IList<Post> ShowScreenNew(int page = 1, int pageSize = 2, string searchValue = "", int postId = 0)
+        {
+            if (searchValue != "")
+                searchValue = $"%{searchValue}%";
+
+            List<Post> data = new List<Post>();
+            using (SqlConnection connection = OpenConnection())
+            {
+                using (SqlCommand cmd = connection.CreateCommand())
+                {
+                    //SqlDataReader dbReader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+                    cmd.CommandText = @"SELECT  p.*,
+                                                u.UserName, u.FirstName, u.LastName, u.Email, u.Phone,
+                                                c.CategoryName, c.CategoryUrlName, c.CategoryDescriptions, c.DisplayOrder
+                                        FROM
+	                                        (
+		                                        SELECT	p.PostId, p.CreatedTime, p.Title, p.BriefContent, N'' as FullContent,
+				                                        p.UrlTitle, p.Image, p.AllowComment, p.IsHidden, p.UserId, p.CategoryId,
+				                                        ROW_NUMBER() OVER (ORDER BY p.PostId DESC) AS RowNumber
+		                                        FROM	Post as p
+		                                        WHERE	((@SearchValue = N'') OR (p.Title LIKE @SearchValue))
+			                                        AND	((@CategoryId = 0) OR (p.CategoryId = @CategoryId)) AND p.IsHidden = 0
+	                                        ) as p
+                                            LEFT JOIN UserAccount as u ON p.UserId = u.UserId
+                                            LEFT JOIN PostCategory as c ON p.CategoryId = c.CategoryId
+                                        WHERE p.RowNumber BETWEEN (@Page - 1) * @PageSize + 1 AND @Page * @PageSize c.CategoryId = 2
+                                        ORDER BY p.RowNumber";
+                    cmd.CommandType = CommandType.Text;
+                    cmd.Parameters.AddWithValue("@Page", page);
+                    cmd.Parameters.AddWithValue("@PageSize", pageSize);
+                    cmd.Parameters.AddWithValue("@SearchValue", searchValue ?? "");
+                    cmd.Parameters.AddWithValue("@CategoryId", postId);
+                    SqlDataReader dbReader = cmd.ExecuteReader();
+
+                    while (dbReader.Read())
+                    {
+                        data.Add(new Post()
+                        {
+                            PostId = Convert.ToInt64(dbReader["PostId"]),
+                            CreatedTime = Convert.ToDateTime(dbReader["CreatedTime"]),
+                            Title = Convert.ToString(dbReader["Title"]),
+                            BriefContent = Convert.ToString(dbReader["BriefContent"]),
+                            FullContent = Convert.ToString(dbReader["FullContent"]),
+                            UrlTitle = Convert.ToString(dbReader["UrlTitle"]),
+                            Image = Convert.ToString(dbReader["Image"]),
+                            AllowComment = Convert.ToBoolean(dbReader["AllowComment"]),
+                            IsHidden = Convert.ToBoolean(dbReader["IsHidden"]),
+                            UserId = Convert.ToInt64(dbReader["UserId"]),
+                            CategoryId = Convert.ToInt32(dbReader["CategoryId"]),
+                            Creator = new Author()
+                            {
+                                UserId = Convert.ToInt64(dbReader["UserId"]),
+                                UserName = Convert.ToString(dbReader["UserName"]),
+                                FirstName = Convert.ToString(dbReader["FirstName"]),
+                                LastName = Convert.ToString(dbReader["LastName"]),
+                                Email = Convert.ToString(dbReader["Email"]),
+                                Phone = Convert.ToString(dbReader["Phone"])
+                            },
+                            Category = new PostCategory()
+                            {
+                                CategoryId = Convert.ToInt32(dbReader["CategoryId"]),
+                                CategoryName = Convert.ToString(dbReader["CategoryName"]),
+                                CategoryUrlName = Convert.ToString(dbReader["CategoryUrlName"]),
+                                CategoryDescriptions = Convert.ToString(dbReader["CategoryDescriptions"]),
+                                DisplayOrder = Convert.ToInt32(dbReader["DisplayOrder"])
+                            }
+                        });
+                    }
+                    dbReader.Close();
+
+                }
+                connection.Close();
+            }
+            return data;
         }
     }
 }

@@ -163,6 +163,7 @@
     <Content Include="favicon.ico" />
     <Content Include="fonts\fontawesome-webfont.svg" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="fonts\OFL.txt" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <Content Include="js\animate.js" />
@@ -182,6 +183,14 @@
     <Content Include="fonts\FontAwesome.otf" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="fonts\Merriweather-Black.ttf" />
+    <Content Include="fonts\Merriweather-BlackItalic.ttf" />
+    <Content Include="fonts\Merriweather-Bold.ttf" />
+    <Content Include="fonts\Merriweather-BoldItalic.ttf" />
+    <Content Include="fonts\Merriweather-Italic.ttf" />
+    <Content Include="fonts\Merriweather-Light.ttf" />
+    <Content Include="fonts\Merriweather-LightItalic.ttf" />
+    <Content Include="fonts\Merriweather-Regular.ttf" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
     <Content Include="Scripts\jquery-3.4.1.min.js" />
@@ -6537,6 +6546,7 @@
     <Content Include="Views\Shared\_Register.cshtml" />
     <Content Include="Views\Home\Login.cshtml" />
     <Content Include="Views\Home\Register.cshtml" />
+    <Content Include="Views\Shared\_Aside.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
