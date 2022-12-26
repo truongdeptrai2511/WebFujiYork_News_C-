@@ -24,12 +24,12 @@
 <!---------------- Search -------------------------->
 <!----------------------------------------->
 
-<div class="col col-lg-12" style="word-spacing: -.31em; display: block; margin: 0px 0% 0 0%;float: left; font-family: 'Neuton';border-right:1.5px solid #808080 ">
+<div class="col col-lg-12" style="word-spacing: -.31em; display: block; margin: 0px 0% 0 0%;float: left; font-family: 'Neuton';border-right:1.5px solid #d9d9d9 ">
     @foreach (var item in Model.Data)
     {
 
         @*<div class="collumns"style="width:100%;">*@
-        <div class="row" style="height:fit-content;border-bottom:1.5px solid #2f2f2f; padding-top:10px">
+        <div class="row" style="height:fit-content;border-bottom:1.5px solid #d9d9d9; padding-top:10px">
             <div class="col col-lg-6" style="font-size: 20px; line-height: 15px; width: 16.5%; display: inline-block; padding: 0 1% 0 1%; vertical-align: top; margin-bottom: 50px; transition: all .9s; ">
                 <div class="head">
                     <span class="headline hl3" style="font-size:large; font-weight:800; float: left;">
@@ -45,7 +45,7 @@
                 <div style="font-family: 'Neuton'; font-size: 18px; color: #2f2f2f; float: right; line-height: normal">@item.BriefContent</div>
             </div>
             <div class="col col-lg-6">
-                <img src="http://localhost:50493/@item.Image" style="width:inherit;padding-right:10px;margin:0 auto;" />
+                <img src="http://localhost:50493/@item.Image" style="width:inherit;padding-right:10px;margin:0 auto;padding-bottom:8px;" />
             </div>
         </div>
         @*</div>*@
